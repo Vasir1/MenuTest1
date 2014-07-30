@@ -139,20 +139,20 @@ public class scanFragment extends Fragment {
 
     // ZXing Result Handler
 
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-
-        if (requestCode == 0) {
-            if (resultCode == RESULT_OK) {
-
-
-                String contents = intent.getStringExtra("SCAN_RESULT"); // This will contain your scan result
-                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
-
-
-            }
-        }
-
-    }
+//    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+//
+//        if (requestCode == 0) {
+//            if (resultCode == RESULT_OK) {
+//
+//
+//                String contents = intent.getStringExtra("SCAN_RESULT"); // This will contain your scan result
+//                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
+//
+//
+//            }
+//        }
+//
+//    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
