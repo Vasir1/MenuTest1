@@ -15,6 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.net.UnknownHostException;
+
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,scanFragment.OnFragmentInteractionListener, SpecialsFragment.OnFragmentInteractionListener, DessertsFragment.OnFragmentInteractionListener, AppetizersFragment.OnFragmentInteractionListener {
@@ -75,6 +83,33 @@ public class MainActivity extends Activity
 
                 Toast.makeText(MainActivity.this, contents,
                         Toast.LENGTH_SHORT).show();
+
+                try {
+                    Socket s = new Socket("localhost",12345); // Change localhost to your IP, obviously.
+                    //Could even get IP from the scan.
+
+                    //outgoing stream redirect to socket
+                    OutputStream out = s.getOutputStream();
+
+                    PrintWriter output = new PrintWriter(out);
+                    output.println("Hello Android!");
+                    BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));
+
+                    //read line(s)
+                    String st = input.readLine();
+                    ///. . .
+                    //Close connection
+                    s.close();
+
+
+                } catch (UnknownHostException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
             }
         }
 
