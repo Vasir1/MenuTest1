@@ -2,11 +2,16 @@ package com.example.hennessee.menutest;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.Application;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -27,6 +33,7 @@ import java.net.UnknownHostException;
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,scanFragment.OnFragmentInteractionListener, SpecialsFragment.OnFragmentInteractionListener, DessertsFragment.OnFragmentInteractionListener, AppetizersFragment.OnFragmentInteractionListener {
 
+    public static boolean scanned = false;
 
     public void onFragmentInteraction(Uri uri)
     {
@@ -84,7 +91,24 @@ public class MainActivity extends Activity
                 Toast.makeText(MainActivity.this, contents,
                         Toast.LENGTH_SHORT).show();
 
-                try {
+                scanned = true;
+
+                mNavigationDrawerFragment.SetList();
+
+                Fragment frag = new SpecialsFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                /*fragmentManager.beginTransaction()
+                        .replace(R.id.container, frag)
+                        .commit();*/
+                mNavigationDrawerFragment.dynamicSelectItem(0);
+
+
+
+
+
+
+                /*try {
+
                     Socket s = new Socket("localhost",12345); // Change localhost to your IP, obviously.
                     //Could even get IP from the scan.
 
@@ -108,7 +132,7 @@ public class MainActivity extends Activity
                 } catch (IOException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
-                }
+                }*/
 
             }
         }
@@ -120,25 +144,66 @@ public class MainActivity extends Activity
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getFragmentManager();
         Fragment fragment = new SpecialsFragment();
-        switch (position)
+
+        if(!scanned && position != 0)
         {
-            case 0:
-                fragment = new scanFragment();
-                break;
-            case 1:
-                fragment = new SpecialsFragment();
+            new AlertDialog.Builder(this)
+                    .setTitle("Error")
+                    .setMessage("You must scan the QR code at your table first!")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            return;
+                        }
+                    })
+                    /*.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })*/
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            return;
+        }
 
-                break;
-            case 2:
-                fragment = new AppetizersFragment();
+        if(!scanned) {
+            switch (position) {
+                case 0:
+                    fragment = new scanFragment();
+                    break;
+                case 1:
+                    fragment = new SpecialsFragment();
 
-                break;
-            case 3:
-                fragment = new DessertsFragment();
-                break;
-            default:
-                fragment = new SpecialsFragment();
-                break;
+                    break;
+                case 2:
+                    fragment = new AppetizersFragment();
+
+                    break;
+                case 3:
+                    fragment = new DessertsFragment();
+                    break;
+                default:
+                    fragment = new SpecialsFragment();
+                    break;
+            }
+        }
+        else
+        {
+            switch (position) {
+                case 0:
+                    fragment = new SpecialsFragment();
+
+                    break;
+                case 1:
+                    fragment = new AppetizersFragment();
+
+                    break;
+                case 2:
+                    fragment = new DessertsFragment();
+                    break;
+                default:
+                    fragment = new SpecialsFragment();
+                    break;
+            }
         }
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment)
@@ -146,16 +211,35 @@ public class MainActivity extends Activity
     }
 
     public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = /*getString(R.string.title_section1)*/ "Specials";
-                break;
-            case 2:
-                mTitle = /*getString(R.string.title_section2)*/"Appetizers";
-                break;
-            case 3:
-                mTitle = /*getString(R.string.title_section3)*/ "Desserts";
-                break;
+        if(!scanned) {
+            switch (number) {
+                case 1:
+                    mTitle = /*getString(R.string.title_section1)*/ "Scan";
+                    break;
+                case 2:
+                    mTitle = /*getString(R.string.title_section2)*/"Specials";
+                    break;
+                case 3:
+                    mTitle = /*getString(R.string.title_section3)*/ "Appetizers";
+                    break;
+                case 4:
+                    mTitle = /*getString(R.string.title_section3)*/ "Desserts";
+                    break;
+            }
+        }
+        else
+        {
+            switch (number) {
+                case 1:
+                    mTitle = /*getString(R.string.title_section1)*/ "Specials";
+                    break;
+                case 2:
+                    mTitle = /*getString(R.string.title_section2)*/"Appetizers";
+                    break;
+                case 3:
+                    mTitle = /*getString(R.string.title_section3)*/ "Desserts";
+                    break;
+            }
         }
     }
 

@@ -97,20 +97,47 @@ public class NavigationDrawerFragment extends Fragment {
                 selectItem(position);
             }
         });
+
+        String[] mArray = {"Scan", "Specials", "Appetizers", "Desserts"};
+
+        if(MainActivity.scanned)
+        {
+            mArray = new String[]{"Specials", "Appetizers", "Desserts"};
+        }
+
         mDrawerListView.setAdapter(new ArrayAdapter<String>(
                 getActionBar().getThemedContext(),
                 android.R.layout.simple_list_item_activated_1,
-                android.R.id.text1,
-                new String[]{
-                        /*getString(R.string.title_section1),
-                        getString(R.string.title_section2),
-                        getString(R.string.title_section3),*/
+                android.R.id.text1, mArray
+                /*new String[]{
+                        "Scan",
                         "Specials",
                         "Appetizers",
                         "Desserts",
-                }));
+                }*/));
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
         return mDrawerListView;
+    }
+
+    public void SetList()
+    {
+        String[] mArray = {"Scan", "Specials", "Appetizers", "Desserts"};
+
+        if(MainActivity.scanned)
+        {
+            mArray = new String[]{"Specials", "Appetizers", "Desserts"};
+        }
+
+        mDrawerListView.setAdapter(new ArrayAdapter<String>(
+                getActionBar().getThemedContext(),
+                android.R.layout.simple_list_item_activated_1,
+                android.R.id.text1, mArray
+                /*new String[]{
+                        "Scan",
+                        "Specials",
+                        "Appetizers",
+                        "Desserts",
+                }*/));
     }
 
     public boolean isDrawerOpen() {
@@ -171,6 +198,8 @@ public class NavigationDrawerFragment extends Fragment {
                 }
 
                 getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+
+
             }
         };
 
@@ -192,6 +221,19 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void selectItem(int position) {
+        mCurrentSelectedPosition = position;
+        if (mDrawerListView != null) {
+            mDrawerListView.setItemChecked(position, true);
+        }
+        if (mDrawerLayout != null) {
+            mDrawerLayout.closeDrawer(mFragmentContainerView);
+        }
+        if (mCallbacks != null) {
+            mCallbacks.onNavigationDrawerItemSelected(position);
+        }
+    }
+
+    public void dynamicSelectItem(int position) {
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
@@ -247,11 +289,6 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-
-        if (item.getItemId() == R.id.action_example) {
-            Toast.makeText(getActivity(), "Example action.", Toast.LENGTH_SHORT).show();
             return true;
         }
 
