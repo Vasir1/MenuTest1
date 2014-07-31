@@ -101,7 +101,7 @@ public class MainActivity extends Activity
                         .replace(R.id.container, frag)
                         .commit();*/
                 mNavigationDrawerFragment.dynamicSelectItem(0);
-
+                 //comment
 
 
 
