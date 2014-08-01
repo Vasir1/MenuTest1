@@ -1,13 +1,16 @@
 package com.example.hennessee.menutest;
 
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
@@ -20,15 +23,22 @@ import android.widget.Toast;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 
 public class MainActivity extends Activity
@@ -112,9 +122,37 @@ public class MainActivity extends Activity
                 //http post
 
 
-                connectToDB();
+               // //connectToDB();
 
 
+//                URL url;
+//                try {
+//                    url = new URL("http://198.84.187.102/MenuGUI/Menu.php");
+//
+//                    URLConnection conn = url.openConnection();
+//
+//                    BufferedReader reader = new BufferedReader(new
+//                            InputStreamReader(conn.getInputStream()));
+//
+//                    StringBuffer sb = new StringBuffer("");
+//                    String line="";
+//                    while ((line = reader.readLine()) != null) {
+//                        sb.append(line);
+//                        break;
+//                    }
+//                    reader.close();
+//                    Toast.makeText(getApplicationContext(), sb.toString(), Toast.LENGTH_SHORT).show();
+//
+//                }
+//                catch (MalformedURLException e1) {
+//                    e1.printStackTrace();
+//                }
+//                catch (IOException e1){
+//                    e1.printStackTrace();
+//                }
+
+
+                new MyAsyncTask().execute();
 
 
 
@@ -392,5 +430,104 @@ public class MainActivity extends Activity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
+
+    class MyAsyncTask extends AsyncTask<String, String, Void> {
+
+        private ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+        InputStream inputStream = null;
+        String result = "";
+
+        protected void onPreExecute() {
+            progressDialog.setMessage("Your progress dialog message...");
+            progressDialog.show();
+            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                public void onCancel(DialogInterface arg0) {
+                    MyAsyncTask.this.cancel(true);
+                }
+            });
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+
+            String url_select = "http://198.84.187.102/MenuGUI/menuJSN.php";
+
+            ArrayList<NameValuePair> param = new ArrayList<NameValuePair>();
+
+            try {
+                // Set up HTTP post
+                // HttpClient is more then less deprecated. Need to change to URLConnection
+                HttpClient httpClient = new DefaultHttpClient();
+
+                HttpPost httpPost = new HttpPost(url_select);
+                httpPost.setEntity(new UrlEncodedFormEntity(param));
+                HttpResponse httpResponse = httpClient.execute(httpPost);
+                HttpEntity httpEntity = httpResponse.getEntity();
+
+                // Read content & Log
+                inputStream = httpEntity.getContent();
+            } catch (UnsupportedEncodingException e1) {
+                Log.e("UnsupportedEncodingException", e1.toString());
+                e1.printStackTrace();
+            } catch (ClientProtocolException e2) {
+                Log.e("ClientProtocolException", e2.toString());
+                e2.printStackTrace();
+            } catch (IllegalStateException e3) {
+                Log.e("IllegalStateException", e3.toString());
+                e3.printStackTrace();
+            } catch (IOException e4) {
+                Log.e("IOException", e4.toString());
+                e4.printStackTrace();
+            }
+            // Convert response to string using String Builder
+            try {
+                BufferedReader bReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"), 8);
+                StringBuilder sBuilder = new StringBuilder();
+
+                String line = null;
+                while ((line = bReader.readLine()) != null) {
+                    sBuilder.append(line + "\n");
+                }
+
+                inputStream.close();
+                result = sBuilder.toString();
+
+            } catch (Exception e) {
+                Log.e("StringBuilding & BufferedReader", "Error converting result " + e.toString());
+            }
+            Log.w("myApp", result);
+            return null;
+        } // protected Void doInBackground(String... params)
+
+
+        protected void onPostExecute(Void v) {
+
+            //parse JSON data
+            try{
+                JSONArray jArray = new JSONArray(result);
+
+                for(int i=0; i < jArray.length(); i++) {
+
+                    JSONObject jObject = jArray.getJSONObject(i);
+
+                    String name = jObject.getString("name");
+                    String tab1_text = jObject.getString("tab1_text");
+                    int active = jObject.getInt("active");
+
+
+                } // End for Loop
+
+                this.progressDialog.dismiss();
+
+            } catch (JSONException e) {
+
+                Log.e("JSONException", "Error: " + e.toString());
+
+            } // catch (JSONException e)
+
+
+        } // protected void onPostExecute(Void v)
+
+    } //class MyAsyncTask extends AsyncTask<String, String, Void>
 
 }
