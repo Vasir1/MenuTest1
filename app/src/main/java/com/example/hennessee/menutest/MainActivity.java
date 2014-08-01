@@ -495,7 +495,16 @@ public class MainActivity extends Activity
             } catch (Exception e) {
                 Log.e("StringBuilding & BufferedReader", "Error converting result " + e.toString());
             }
-            Log.w("myApp", result);
+            Log.w("DATABASE", result);
+            com.example.hennessee.menutest.MenuItem item =new com.example.hennessee.menutest.MenuItem();
+           // JsonParser parser = Json.createParser(new StringReader("[]"));
+
+            //TODO string parsing, either normal string building, but there might be JSON specific tools to make it easier.
+            //http://docs.oracle.com/javaee/7/api/javax/json/stream/JsonParser.html
+            //http://stackoverflow.com/questions/2591098/how-to-parse-json-in-java
+            //
+            //item.name=result.
+
             return null;
         } // protected Void doInBackground(String... params)
 
