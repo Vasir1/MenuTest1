@@ -2,17 +2,15 @@ package com.example.hennessee.menutest;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Application;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.AlertDialog;
-import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,14 +18,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
-import java.io.FileDescriptor;
-import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.net.Socket;
-import java.net.UnknownHostException;
 
 
 public class MainActivity extends Activity
@@ -104,6 +105,16 @@ public class MainActivity extends Activity
                     ///////////////
 
 
+              //  JSONObject jsonobject;
+              //  jsonobject = JSONfunctions.getJSONfromURL("http://198.84.187.102/MenuGUI/Menu.php");
+               // jsonobject.getString()
+
+                //http post
+
+
+                connectToDB();
+
+
 
 
 
@@ -137,6 +148,69 @@ public class MainActivity extends Activity
 
             }
         }
+
+    }
+
+    public void connectToDB(){
+        String result = null;
+        InputStream is = null;
+
+        try{
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httppost = new HttpPost("http://198.84.187.102/MenuGUI/Menu.php");
+            // httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            HttpResponse response = httpclient.execute(httppost);
+            HttpEntity entity = response.getEntity();
+            is = entity.getContent();
+
+            Log.e("log_tag", "connection success ");
+            Toast.makeText(getApplicationContext(), "pass", Toast.LENGTH_SHORT).show();
+        }
+
+
+        catch(Exception e)
+        {
+            Log.e("log_tag", "Error in http connection "+e.toString());
+            Toast.makeText(getApplicationContext(), "Connection fail",                                        Toast.LENGTH_SHORT).show();
+
+        }
+        //convert response to string
+        try{
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
+            StringBuilder sb = new StringBuilder();
+            String line = null;
+            while ((line = reader.readLine()) != null)
+            {
+                sb.append(line + "\n");
+                //  Intent i = new Intent(getBaseContext(),DatabaseActivity.class);
+                //  startActivity(i);
+            }
+            is.close();
+
+            result=sb.toString();
+        }
+        catch(Exception e)
+        {
+            Log.e("log_tag", "Error converting result "+e.toString());
+        }
+
+
+        try{
+
+            JSONObject json_data = new JSONObject(result);
+
+            CharSequence w= (CharSequence) json_data.get("re");
+
+            Toast.makeText(getApplicationContext(), w, Toast.LENGTH_SHORT).show();
+
+
+        }
+        catch(JSONException e)
+        {
+            Log.e("log_tag", "Error parsing data " + e.toString());
+            Toast.makeText(getApplicationContext(), "JsonArray fail", Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 

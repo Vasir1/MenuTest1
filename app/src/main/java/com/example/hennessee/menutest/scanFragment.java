@@ -126,16 +126,21 @@ public class scanFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(
+               Intent intent = new Intent(
                         "com.google.zxing.client.android.SCAN");
                 intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
                 getActivity().startActivityForResult(intent, 0);
-            }
 
-        });
+               // MainActivity.connectToDB();
+          }
+
+       }
+        );
 
         return rootView;
     }
+
+
 
     // ZXing Result Handler
 
