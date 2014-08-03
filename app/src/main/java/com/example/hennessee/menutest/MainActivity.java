@@ -39,10 +39,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,scanFragment.OnFragmentInteractionListener, SpecialsFragment.OnFragmentInteractionListener, DessertsFragment.OnFragmentInteractionListener, AppetizersFragment.OnFragmentInteractionListener {
+
 
     public static boolean scanned = false;
 
@@ -504,7 +509,7 @@ public class MainActivity extends Activity
             //http://stackoverflow.com/questions/2591098/how-to-parse-json-in-java
             //
             //item.name=result.
-
+            progressDialog.dismiss();
             return null;
         } // protected Void doInBackground(String... params)
 
@@ -514,17 +519,32 @@ public class MainActivity extends Activity
             //parse JSON data
             try{
                 JSONArray jArray = new JSONArray(result);
+                List<String> categories = new ArrayList<String>();
+
+
 
                 for(int i=0; i < jArray.length(); i++) {
 
                     JSONObject jObject = jArray.getJSONObject(i);
 
-                    String name = jObject.getString("name");
-                    String tab1_text = jObject.getString("tab1_text");
-                    int active = jObject.getInt("active");
+                    String name = jObject.getString("Name");
+                    String category = jObject.getString("Category");
 
+                    if(!categories.contains(category))
+                    {
+                        categories.add(category);
+                    }
+                    //String tab1_text = jObject.getString("tab1_text");
+                    //int active = jObject.getInt("active");
+
+
+                    Log.e("log_text", name);
 
                 } // End for Loop
+
+                String[] arr = (String[])categories.toArray(new String[categories.size()]);
+                mNavigationDrawerFragment.SetList(arr);
+
 
                 this.progressDialog.dismiss();
 

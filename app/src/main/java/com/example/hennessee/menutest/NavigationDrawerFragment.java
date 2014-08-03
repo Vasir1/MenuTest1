@@ -98,7 +98,7 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
-        String[] mArray = {"Scan", "Specials", "Appetizers", "Desserts"};
+        String[] mArray = {"Scan"};
 
         if(MainActivity.scanned)
         {
@@ -138,6 +138,14 @@ public class NavigationDrawerFragment extends Fragment {
                         "Appetizers",
                         "Desserts",
                 }*/));
+    }
+
+    public void SetList(String[] arr)
+    {
+        mDrawerListView.setAdapter(new ArrayAdapter<String>(
+                getActionBar().getThemedContext(),
+                android.R.layout.simple_list_item_activated_1,
+                android.R.id.text1, arr ));
     }
 
     public boolean isDrawerOpen() {
