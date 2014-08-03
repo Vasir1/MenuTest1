@@ -6,20 +6,27 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
+import android.view.ActionProvider;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.example.hennessee.menutest.dummy.CategoryFragment;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -46,12 +53,17 @@ import java.util.ListIterator;
 
 
 public class MainActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks,scanFragment.OnFragmentInteractionListener, SpecialsFragment.OnFragmentInteractionListener, DessertsFragment.OnFragmentInteractionListener, AppetizersFragment.OnFragmentInteractionListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks,scanFragment.OnFragmentInteractionListener, SpecialsFragment.OnFragmentInteractionListener, DessertsFragment.OnFragmentInteractionListener, AppetizersFragment.OnFragmentInteractionListener, CategoryFragment.OnFragmentInteractionListener {
 
 
     public static boolean scanned = false;
 
     public void onFragmentInteraction(Uri uri)
+    {
+
+    }
+
+    public void onFragmentInteraction(String s)
     {
 
     }
@@ -116,7 +128,7 @@ public class MainActivity extends Activity
                 /*fragmentManager.beginTransaction()
                         .replace(R.id.container, frag)
                         .commit();*/
-                mNavigationDrawerFragment.dynamicSelectItem(0);
+                //mNavigationDrawerFragment.dynamicSelectItem(0);
                     ///////////////
 
 
@@ -283,7 +295,7 @@ public class MainActivity extends Activity
             return;
         }
 
-        if(!scanned) {
+        /*if(!scanned) {
             switch (position) {
                 case 0:
                     fragment = new scanFragment();
@@ -322,7 +334,13 @@ public class MainActivity extends Activity
                     fragment = new SpecialsFragment();
                     break;
             }
-        }
+        }*/
+
+        if(!scanned)
+            fragment = new scanFragment();
+        else
+            fragment = mNavigationDrawerFragment.DrawerFragments.get(position);
+
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment)
                 .commit();
@@ -520,6 +538,7 @@ public class MainActivity extends Activity
             try{
                 JSONArray jArray = new JSONArray(result);
                 List<String> categories = new ArrayList<String>();
+                List<com.example.hennessee.menutest.MenuItem> MenuItems = new ArrayList<com.example.hennessee.menutest.MenuItem>();
 
 
 
@@ -527,8 +546,19 @@ public class MainActivity extends Activity
 
                     JSONObject jObject = jArray.getJSONObject(i);
 
-                    String name = jObject.getString("Name");
+                    com.example.hennessee.menutest.MenuItem mi = new com.example.hennessee.menutest.MenuItem();
+
+                    mi.name = jObject.getString("Name");
+                    mi.category = jObject.getString("Category");
+                    mi.comment = jObject.getString("Comments");
+                    mi.price = jObject.getString("Price");
+
+                    MenuItems.add(mi);
+
                     String category = jObject.getString("Category");
+
+
+
 
                     if(!categories.contains(category))
                     {
@@ -538,13 +568,13 @@ public class MainActivity extends Activity
                     //int active = jObject.getInt("active");
 
 
-                    Log.e("log_text", name);
+                    //Log.e("log_text", name);
 
                 } // End for Loop
 
-                String[] arr = (String[])categories.toArray(new String[categories.size()]);
-                mNavigationDrawerFragment.SetList(arr);
-
+                String[] arr = categories.toArray(new String[categories.size()]);
+                mNavigationDrawerFragment.SetList(arr, MenuItems);
+                //mNavigationDrawerFragment.dynamicSelectItem(0);
 
                 this.progressDialog.dismiss();
 
