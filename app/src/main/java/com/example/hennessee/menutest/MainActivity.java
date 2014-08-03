@@ -29,9 +29,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -39,10 +39,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks,scanFragment.OnFragmentInteractionListener, SpecialsFragment.OnFragmentInteractionListener, DessertsFragment.OnFragmentInteractionListener, AppetizersFragment.OnFragmentInteractionListener {
+
 
     public static boolean scanned = false;
 
@@ -377,42 +382,6 @@ public class MainActivity extends Activity
         return super.onCreateOptionsMenu(menu);
     }
 
-    public void myJSNParsing(String _database){
-        JSONParser parser=new JSONParser();
-
-        try {
-            //Object obj = parser.parse(result);
-            org.json.simple.JSONObject jsonObject = (org.json.simple.JSONObject) parser.parse(_database);
-            // get a String from the JSON object
-            String firstName = (String) jsonObject.get("Name");
-            Log.w("DATABASE", "The first name is: " + firstName);
-            //     JSONArray array = (JSONArray) obj;
-            // System.out.println("The 2nd element of array");
-            // System.out.println(array.get(1));
-            //  Log.w("DATABASE", array.get(1).toString());
-            //System.out.println();
-
-        }
-        catch(org.json.simple.parser.ParseException pe){
-            System.out.println("position: " + pe.getPosition());
-            System.out.println(pe);
-        }
-        // catch(JSONException pe){
-
-        //    System.out.println(pe);
-        //}
-
-        //  com.example.hennessee.menutest.MenuItem item =new com.example.hennessee.menutest.MenuItem();
-        // JsonParser parser = Json.createParser(new StringReader("[]"));
-
-        //TODO string parsing, either normal string building, but there might be JSON specific tools to make it easier.
-        //http://docs.oracle.com/javaee/7/api/javax/json/stream/JsonParser.html
-        //http://stackoverflow.com/questions/2591098/how-to-parse-json-in-java
-        //
-        //item.name=result.
-
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -532,20 +501,15 @@ public class MainActivity extends Activity
                 Log.e("StringBuilding & BufferedReader", "Error converting result " + e.toString());
             }
             Log.w("DATABASE", result);
+            com.example.hennessee.menutest.MenuItem item =new com.example.hennessee.menutest.MenuItem();
+           // JsonParser parser = Json.createParser(new StringReader("[]"));
 
-
-            myJSNParsing(result);
-//            try {
-//                JSONObject obj = new JSONObject(result);
-//               // String pageName = obj.getJSONObject("pageInfo").getString("pageName");
-//                JSONArray arr = obj.getJSONArray("Name");
-//            }
-//
-//            catch(JSONException pe){
-//
-//
-//            }
-
+            //TODO string parsing, either normal string building, but there might be JSON specific tools to make it easier.
+            //http://docs.oracle.com/javaee/7/api/javax/json/stream/JsonParser.html
+            //http://stackoverflow.com/questions/2591098/how-to-parse-json-in-java
+            //
+            //item.name=result.
+            progressDialog.dismiss();
             return null;
         } // protected Void doInBackground(String... params)
 
@@ -554,18 +518,33 @@ public class MainActivity extends Activity
 
             //parse JSON data
             try{
-                org.json.JSONArray jArray = new org.json.JSONArray(result);
+                JSONArray jArray = new JSONArray(result);
+                List<String> categories = new ArrayList<String>();
+
+
 
                 for(int i=0; i < jArray.length(); i++) {
 
                     JSONObject jObject = jArray.getJSONObject(i);
 
-                    String name = jObject.getString("name");
-                    String tab1_text = jObject.getString("tab1_text");
-                    int active = jObject.getInt("active");
+                    String name = jObject.getString("Name");
+                    String category = jObject.getString("Category");
 
+                    if(!categories.contains(category))
+                    {
+                        categories.add(category);
+                    }
+                    //String tab1_text = jObject.getString("tab1_text");
+                    //int active = jObject.getInt("active");
+
+
+                    Log.e("log_text", name);
 
                 } // End for Loop
+
+                String[] arr = (String[])categories.toArray(new String[categories.size()]);
+                mNavigationDrawerFragment.SetList(arr);
+
 
                 this.progressDialog.dismiss();
 
