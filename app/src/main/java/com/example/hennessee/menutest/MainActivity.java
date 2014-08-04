@@ -6,22 +6,17 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.ListFragment;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.ActionProvider;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -44,29 +39,30 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 
 public class MainActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks,scanFragment.OnFragmentInteractionListener, SpecialsFragment.OnFragmentInteractionListener, DessertsFragment.OnFragmentInteractionListener, AppetizersFragment.OnFragmentInteractionListener, CategoryFragment.OnFragmentInteractionListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, scanFragment.OnFragmentInteractionListener, SpecialsFragment.OnFragmentInteractionListener, DessertsFragment.OnFragmentInteractionListener, AppetizersFragment.OnFragmentInteractionListener, CategoryFragment.OnFragmentInteractionListener {
 
 
     public static boolean scanned = false;
 
-    public void onFragmentInteraction(Uri uri)
-    {
+    public String scannedMessage="";
+
+    public void onFragmentInteraction(Uri uri) {
 
     }
 
-    public void onFragmentInteraction(String s)
-    {
+    public void onFragmentInteraction(String s) {
 
     }
+
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
@@ -125,21 +121,24 @@ public class MainActivity extends Activity
 
                 Fragment frag = new SpecialsFragment();
                 FragmentManager fragmentManager = getFragmentManager();
+
+                scannedMessage=contents;
+                new Thread(new SignIn(scannedMessage)).start();
                 /*fragmentManager.beginTransaction()
                         .replace(R.id.container, frag)
                         .commit();*/
                 //mNavigationDrawerFragment.dynamicSelectItem(0);
-                    ///////////////
+                ///////////////
 
 
-              //  JSONObject jsonobject;
-              //  jsonobject = JSONfunctions.getJSONfromURL("http://198.84.187.102/MenuGUI/Menu.php");
-               // jsonobject.getString()
+                //  JSONObject jsonobject;
+                //  jsonobject = JSONfunctions.getJSONfromURL("http://198.84.187.102/MenuGUI/Menu.php");
+                // jsonobject.getString()
 
                 //http post
 
 
-               // //connectToDB();
+                // //connectToDB();
 
 
 //                URL url;
@@ -206,11 +205,11 @@ public class MainActivity extends Activity
 
     }
 
-    public void connectToDB(){
+    public void connectToDB() {
         String result = null;
         InputStream is = null;
 
-        try{
+        try {
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httppost = new HttpPost("http://198.84.187.102/MenuGUI/Menu.php");
             // httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
@@ -220,48 +219,39 @@ public class MainActivity extends Activity
 
             Log.e("log_tag", "connection success ");
             Toast.makeText(getApplicationContext(), "pass", Toast.LENGTH_SHORT).show();
-        }
-
-
-        catch(Exception e)
-        {
-            Log.e("log_tag", "Error in http connection "+e.toString());
-            Toast.makeText(getApplicationContext(), "Connection fail",                                        Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("log_tag", "Error in http connection " + e.toString());
+            Toast.makeText(getApplicationContext(), "Connection fail", Toast.LENGTH_SHORT).show();
 
         }
         //convert response to string
-        try{
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is,"iso-8859-1"),8);
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
             StringBuilder sb = new StringBuilder();
             String line = null;
-            while ((line = reader.readLine()) != null)
-            {
+            while ((line = reader.readLine()) != null) {
                 sb.append(line + "\n");
                 //  Intent i = new Intent(getBaseContext(),DatabaseActivity.class);
                 //  startActivity(i);
             }
             is.close();
 
-            result=sb.toString();
-        }
-        catch(Exception e)
-        {
-            Log.e("log_tag", "Error converting result "+e.toString());
+            result = sb.toString();
+        } catch (Exception e) {
+            Log.e("log_tag", "Error converting result " + e.toString());
         }
 
 
-        try{
+        try {
 
             JSONObject json_data = new JSONObject(result);
 
-            CharSequence w= (CharSequence) json_data.get("re");
+            CharSequence w = (CharSequence) json_data.get("re");
 
             Toast.makeText(getApplicationContext(), w, Toast.LENGTH_SHORT).show();
 
 
-        }
-        catch(JSONException e)
-        {
+        } catch (JSONException e) {
             Log.e("log_tag", "Error parsing data " + e.toString());
             Toast.makeText(getApplicationContext(), "JsonArray fail", Toast.LENGTH_SHORT).show();
         }
@@ -275,8 +265,7 @@ public class MainActivity extends Activity
         FragmentManager fragmentManager = getFragmentManager();
         Fragment fragment = new SpecialsFragment();
 
-        if(!scanned && position != 0)
-        {
+        if (!scanned && position != 0) {
             new AlertDialog.Builder(this)
                     .setTitle("Error")
                     .setMessage("You must scan the QR code at your table first!")
@@ -336,7 +325,7 @@ public class MainActivity extends Activity
             }
         }*/
 
-        if(!scanned)
+        if (!scanned)
             fragment = new scanFragment();
         else
             fragment = mNavigationDrawerFragment.DrawerFragments.get(position);
@@ -347,7 +336,7 @@ public class MainActivity extends Activity
     }
 
     public void onSectionAttached(int number) {
-        if(!scanned) {
+        if (!scanned) {
             switch (number) {
                 case 1:
                     mTitle = /*getString(R.string.title_section1)*/ "Scan";
@@ -362,9 +351,7 @@ public class MainActivity extends Activity
                     mTitle = /*getString(R.string.title_section3)*/ "Desserts";
                     break;
             }
-        }
-        else
-        {
+        } else {
             switch (number) {
                 case 1:
                     mTitle = /*getString(R.string.title_section1)*/ "Specials";
@@ -439,7 +426,7 @@ public class MainActivity extends Activity
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
+                                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
 
@@ -519,8 +506,8 @@ public class MainActivity extends Activity
                 Log.e("StringBuilding & BufferedReader", "Error converting result " + e.toString());
             }
             Log.w("DATABASE", result);
-            com.example.hennessee.menutest.MenuItem item =new com.example.hennessee.menutest.MenuItem();
-           // JsonParser parser = Json.createParser(new StringReader("[]"));
+            com.example.hennessee.menutest.MenuItem item = new com.example.hennessee.menutest.MenuItem();
+            // JsonParser parser = Json.createParser(new StringReader("[]"));
 
             //TODO string parsing, either normal string building, but there might be JSON specific tools to make it easier.
             //http://docs.oracle.com/javaee/7/api/javax/json/stream/JsonParser.html
@@ -528,6 +515,8 @@ public class MainActivity extends Activity
             //
             //item.name=result.
             progressDialog.dismiss();
+
+
             return null;
         } // protected Void doInBackground(String... params)
 
@@ -535,14 +524,13 @@ public class MainActivity extends Activity
         protected void onPostExecute(Void v) {
 
             //parse JSON data
-            try{
+            try {
                 JSONArray jArray = new JSONArray(result);
                 List<String> categories = new ArrayList<String>();
                 List<com.example.hennessee.menutest.MenuItem> MenuItems = new ArrayList<com.example.hennessee.menutest.MenuItem>();
 
 
-
-                for(int i=0; i < jArray.length(); i++) {
+                for (int i = 0; i < jArray.length(); i++) {
 
                     JSONObject jObject = jArray.getJSONObject(i);
 
@@ -558,10 +546,7 @@ public class MainActivity extends Activity
                     String category = jObject.getString("Category");
 
 
-
-
-                    if(!categories.contains(category))
-                    {
+                    if (!categories.contains(category)) {
                         categories.add(category);
                     }
                     //String tab1_text = jObject.getString("tab1_text");
@@ -578,6 +563,8 @@ public class MainActivity extends Activity
 
                 this.progressDialog.dismiss();
 
+
+
             } catch (JSONException e) {
 
                 Log.e("JSONException", "Error: " + e.toString());
@@ -588,5 +575,63 @@ public class MainActivity extends Activity
         } // protected void onPostExecute(Void v)
 
     } //class MyAsyncTask extends AsyncTask<String, String, Void>
+
+    private class SignIn implements Runnable {
+        private String mMsg;
+
+        public SignIn(String msg) {
+            mMsg = msg;
+        }
+
+        public void run() {
+            try {
+
+                Socket client = new Socket("198.84.187.102", 7575);  //connect to server
+                PrintWriter printwriter = new PrintWriter(client.getOutputStream(), true);
+                printwriter.write(mMsg);  //write the message to output stream
+
+                printwriter.flush();
+                printwriter.close();
+                client.close();   //closing the connection
+
+            } catch (UnknownHostException e) {
+                Log.w("Error",e.toString());
+            } catch (IOException e) {
+                Log.w("Error",e.toString());
+                //Log.w("Warning", e.printStackTrace().to);
+               // e.printStackTrace();
+            }
+        }
+    }
+
+    private class OrderFood implements Runnable {
+        private String mMsg;
+
+        private com.example.hennessee.menutest.MenuItem item;
+        public OrderFood(String msg, com.example.hennessee.menutest.MenuItem _item) {
+            mMsg = msg; // TABLE?
+            item =_item;
+        }
+
+        public void run() {
+            try {
+
+                Socket client = new Socket("198.84.187.102", 7575);  //connect to server
+                PrintWriter printwriter = new PrintWriter(client.getOutputStream(), true);
+                printwriter.write(mMsg+" "+item.name);  //write the message to output stream
+
+                printwriter.flush();
+                printwriter.close();
+                client.close();   //closing the connection
+
+            } catch (UnknownHostException e) {
+                Log.w("Error",e.toString());
+            } catch (IOException e) {
+                Log.w("Error",e.toString());
+                //Log.w("Warning", e.printStackTrace().to);
+                // e.printStackTrace();
+            }
+        }
+    }
 
 }
