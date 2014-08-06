@@ -129,7 +129,7 @@ public class NavigationDrawerFragment extends Fragment {
 
     public void SetList()
     {
-        String[] mArray = {"Scan", "Specials", "Appetizers", "Desserts"};
+        String[] mArray = {"Scan"};
 
         if(MainActivity.scanned)
         {

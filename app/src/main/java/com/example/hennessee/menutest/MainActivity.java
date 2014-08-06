@@ -5,6 +5,8 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+//import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -586,13 +588,19 @@ public class MainActivity extends Activity
         public void run() {
             try {
 
-                Socket client = new Socket("198.84.187.102", 7575);  //connect to server
+                Socket client = new Socket("10.0.0.5", 7575);  //connect to server
                 PrintWriter printwriter = new PrintWriter(client.getOutputStream(), true);
                 printwriter.write(mMsg);  //write the message to output stream
 
                 printwriter.flush();
                 printwriter.close();
+                client.shutdownOutput();
                 client.close();   //closing the connection
+
+                if(client.isClosed())
+                {
+                    Log.e("Client", "Still connected....." );
+                }
 
             } catch (UnknownHostException e) {
                 Log.w("Error",e.toString());
@@ -623,6 +631,11 @@ public class MainActivity extends Activity
                 printwriter.flush();
                 printwriter.close();
                 client.close();   //closing the connection
+
+                if(client.isClosed())
+                {
+                    Log.e("Client", "Still connected....." );
+                }
 
             } catch (UnknownHostException e) {
                 Log.w("Error",e.toString());

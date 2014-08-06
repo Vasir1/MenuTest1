@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MenuTest2.iml" filepath="$PROJECT_DIR$/MenuTest2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MenuTestFinal.iml" filepath="$PROJECT_DIR$/MenuTestFinal.iml" />
       <module fileurl="file://$PROJECT_DIR$/MenuTestKyle.iml" filepath="$PROJECT_DIR$/MenuTestKyle.iml" />
       <module fileurl="file://$PROJECT_DIR$/NewMenuTest.iml" filepath="$PROJECT_DIR$/NewMenuTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
