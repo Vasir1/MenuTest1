@@ -63,6 +63,7 @@ public class ViewItemFragment extends Fragment {
     public String Category;
     public String Comments;
     public String ImageURL;
+    public MenuItem mItem;
 
     ImageView mImage;
     // TODO: Rename parameter arguments, choose names that match
@@ -97,12 +98,13 @@ public class ViewItemFragment extends Fragment {
     public ViewItemFragment(){
     }
 
-    public ViewItemFragment(String name, String category, String price, String comments, String imageURL) {
+    public ViewItemFragment(String name, String category, String price, String comments, String imageURL, MenuItem mitem) {
         Name = name;
         Category = category;
         Comments = comments;
         Price = price;
         ImageURL = imageURL;
+        mItem = mitem;
     }
 
     public void SetUp(String name, String category, String price, String comments, String imageURL)
@@ -140,6 +142,7 @@ public class ViewItemFragment extends Fragment {
 
     private void scaleImage()
     {
+
         // Get the ImageView and its bitmap
         ImageView view = (ImageView) getView().findViewById(R.id.imageView);
         Drawable drawing = view.getDrawable();
