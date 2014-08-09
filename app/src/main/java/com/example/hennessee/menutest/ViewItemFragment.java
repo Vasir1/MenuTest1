@@ -1,49 +1,30 @@
 package com.example.hennessee.menutest;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
+import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.graphics.Matrix;
+import android.widget.Toast;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
 
 
 
@@ -290,7 +271,27 @@ public class ViewItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_view_item, container, false);
+        View rootView=inflater.inflate(R.layout.fragment_view_item, container, false);
+
+        final Button button = (Button) rootView. findViewById(R.id.buttonBuy);
+        button.setOnClickListener(new View.OnClickListener() {
+                                      //  button.setOnClickListener(new OnClickListener() {
+
+                                      //Handles scan button click, makes a call to another QR scanning app
+                                      @Override
+                                      public void onClick(View v) {
+
+                                          Toast.makeText(getActivity(), "Added to order!",
+                                                  Toast.LENGTH_SHORT).show();
+                                         // com.example.hennessee.menutest.User user=new com.example.hennessee.menutest.Userv();
+
+                                          // MainActivity.connectToDB();
+                                      }
+
+                                  }
+        );
+
+        return rootView;
 
 
     }
