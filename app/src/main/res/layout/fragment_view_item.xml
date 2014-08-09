@@ -1,0 +1,52 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.hennessee.menutest.ViewItemFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <ImageView
+        android:layout_width="192dp"
+        android:layout_height="192dp"
+        android:id="@+id/imageView"
+        android:layout_gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/txtName"
+        android:layout_gravity="center_horizontal|top"
+        android:textSize="20dp"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/txtCategory"
+        android:layout_gravity="center_horizontal|top"
+        android:textSize="20dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="50dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/txtPrice"
+        android:layout_gravity="center_horizontal|top"
+        android:textSize="20dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginTop="90dp" />
+
+    <TextView
+        android:layout_width="206dp"
+        android:layout_height="148dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/txtComment"
+        android:layout_gravity="center_horizontal|bottom" />
+
+</FrameLayout>
