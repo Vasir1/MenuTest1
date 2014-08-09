@@ -1,6 +1,7 @@
 package com.example.hennessee.menutest.dummy;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.util.Log;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.hennessee.menutest.MenuItem;
 import com.example.hennessee.menutest.R;
+import com.example.hennessee.menutest.ViewItemFragment;
 
 //import com.example.hennessee.menutest.dummy.dummy.DummyContent;
 
@@ -157,6 +159,15 @@ public class CategoryFragment extends Fragment implements AbsListView.OnItemClic
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
             mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
+
+            MenuItem mItem = MenuItems.get(position);
+            ViewItemFragment viFragment = new ViewItemFragment(mItem.name, mItem.category, mItem.price, mItem.comment, mItem.ImageURL);
+            FragmentManager fragmentManager = getFragmentManager();
+
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, viFragment)
+                    .commit();
         }
     }
 
@@ -172,6 +183,8 @@ public class CategoryFragment extends Fragment implements AbsListView.OnItemClic
             ((TextView) emptyView).setText(emptyText);
         }
     }
+
+
 
     /**
     * This interface must be implemented by activities that contain this

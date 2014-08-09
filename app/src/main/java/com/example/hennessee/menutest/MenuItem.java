@@ -10,4 +10,5 @@ public class MenuItem {
     public String comment;
     public String price;
     public String category;
+    public String ImageURL;
 }

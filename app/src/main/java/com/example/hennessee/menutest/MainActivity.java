@@ -50,7 +50,7 @@ import java.util.List;
 
 
 public class MainActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, scanFragment.OnFragmentInteractionListener, SpecialsFragment.OnFragmentInteractionListener, DessertsFragment.OnFragmentInteractionListener, AppetizersFragment.OnFragmentInteractionListener, CategoryFragment.OnFragmentInteractionListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, scanFragment.OnFragmentInteractionListener, SpecialsFragment.OnFragmentInteractionListener, DessertsFragment.OnFragmentInteractionListener, AppetizersFragment.OnFragmentInteractionListener, CategoryFragment.OnFragmentInteractionListener, ViewItemFragment.OnFragmentInteractionListener {
 
 
     public static boolean scanned = false;
@@ -213,7 +213,7 @@ public class MainActivity extends Activity
 
         try {
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://198.84.187.102/MenuGUI/Menu.php");
+            HttpPost httppost = new HttpPost("http://74.178.252.239/MenuGUI/Menu.php");
             // httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             HttpResponse response = httpclient.execute(httppost);
             HttpEntity entity = response.getEntity();
@@ -462,7 +462,7 @@ public class MainActivity extends Activity
         @Override
         protected Void doInBackground(String... params) {
 
-            String url_select = "http://198.84.187.102/MenuGUI/menuJSN.php";
+            String url_select = "http://74.178.252.239/MenuGUI/menuJSN.php";
 
             ArrayList<NameValuePair> param = new ArrayList<NameValuePair>();
 
@@ -542,6 +542,7 @@ public class MainActivity extends Activity
                     mi.category = jObject.getString("Category");
                     mi.comment = jObject.getString("Comments");
                     mi.price = jObject.getString("Price");
+                    mi.ImageURL = jObject.getString("ImageURL");
 
                     MenuItems.add(mi);
 
@@ -588,7 +589,7 @@ public class MainActivity extends Activity
         public void run() {
             try {
 
-                Socket client = new Socket("10.0.0.5", 7575);  //connect to server
+                Socket client = new Socket("74.178.252.239", 7575);  //connect to server
                 PrintWriter printwriter = new PrintWriter(client.getOutputStream(), true);
                 printwriter.write(mMsg);  //write the message to output stream
 
