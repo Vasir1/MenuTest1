@@ -1,3 +1,5 @@
+package com.example.hennessee.menutest;
+
 import com.example.hennessee.menutest.MenuItem;
 
 import java.util.ArrayList;
@@ -8,14 +10,21 @@ import java.util.List;
  */
 public class Order {
 
+
+
     public List<MenuItem> OrderItems = new ArrayList<MenuItem>();
 
-    public void Order()
+    public  Order()
     {
     }
 
-    public void Order(List<MenuItem> orderItems)
+    public  Order(List<MenuItem> orderItems)
     {
         OrderItems = orderItems;
+    }
+
+    public void Add(MenuItem mItem)
+    {
+        OrderItems.add(mItem);
     }
 }

@@ -1,15 +1,17 @@
+package com.example.hennessee.menutest;
+
 /**
  * Created by Hennessee on 8/9/2014.
  */
 public class User {
     public Order mOrder;
 
-    public void User()
+    public  User()
     {
         mOrder = new Order();
     }
 
-    public void User(Order o)
+    public User(Order o)
     {
         mOrder = o;
     }

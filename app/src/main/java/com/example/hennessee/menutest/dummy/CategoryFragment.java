@@ -29,7 +29,7 @@ import java.util.List;
  * Large screen devices (such as tablets) are supported by replacing the ListView
  * with a GridView.
  * <p />
- * Activities containing this fragment MUST implement the {@link }
+ * Activities containing this fragment MUST implement the  Callbacks}
  * interface.
  */
 public class CategoryFragment extends Fragment implements AbsListView.OnItemClickListener {
@@ -161,7 +161,7 @@ public class CategoryFragment extends Fragment implements AbsListView.OnItemClic
             mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
 
             MenuItem mItem = MenuItems.get(position);
-            ViewItemFragment viFragment = new ViewItemFragment(mItem.name, mItem.category, mItem.price, mItem.comment, mItem.ImageURL);
+            ViewItemFragment viFragment = new ViewItemFragment(mItem.name, mItem.category, mItem.price, mItem.comment, mItem.ImageURL, MenuItems.get(position));
             FragmentManager fragmentManager = getFragmentManager();
 
 

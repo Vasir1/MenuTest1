@@ -52,7 +52,7 @@ import java.util.List;
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, scanFragment.OnFragmentInteractionListener, SpecialsFragment.OnFragmentInteractionListener, DessertsFragment.OnFragmentInteractionListener, AppetizersFragment.OnFragmentInteractionListener, CategoryFragment.OnFragmentInteractionListener, ViewItemFragment.OnFragmentInteractionListener {
 
-
+    public static User mUser;
     public static boolean scanned = false;
 
     public String scannedMessage="";
@@ -88,6 +88,10 @@ public class MainActivity extends Activity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        mUser = new User();
+
+
 
         /*final Button button = (Button) findViewById(R.id.buttonScan);
         button.setOnClickListener(new View.OnClickListener() {
