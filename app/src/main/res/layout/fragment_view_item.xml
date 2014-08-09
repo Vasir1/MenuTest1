@@ -7,10 +7,12 @@
     <!-- TODO: Update blank fragment layout -->
 
     <ImageView
-        android:layout_width="192dp"
-        android:layout_height="192dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/imageView"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:layout_marginBottom="25dp"
+        android:adjustViewBounds="true" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -1,27 +1,50 @@
 package com.example.hennessee.menutest;
 
 import android.app.Activity;
-import android.app.Fragment;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.graphics.Matrix;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
+
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
+
 
 
 /**
@@ -102,6 +125,7 @@ public class ViewItemFragment extends Fragment {
                 mImage.post(new Runnable() {
                     public void run() {
                         mImage.setImageDrawable(d);
+                        scaleImage();
                     }
                 });
             }
@@ -112,6 +136,64 @@ public class ViewItemFragment extends Fragment {
 
         Bitmap bmp;
         //new MyAsyncTask.execute(bmp);
+    }
+
+    private void scaleImage()
+    {
+        // Get the ImageView and its bitmap
+        ImageView view = (ImageView) getView().findViewById(R.id.imageView);
+        Drawable drawing = view.getDrawable();
+        if (drawing == null) {
+            return; // Checking for null & return, as suggested in comments
+        }
+        Bitmap bitmap = ((BitmapDrawable)drawing).getBitmap();
+
+        // Get current dimensions AND the desired bounding box
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int bounding = dpToPx(350);
+        Log.i("Test", "original width = " + Integer.toString(width));
+        Log.i("Test", "original height = " + Integer.toString(height));
+        Log.i("Test", "bounding = " + Integer.toString(bounding));
+
+        // Determine how much to scale: the dimension requiring less scaling is
+        // closer to the its side. This way the image always stays inside your
+        // bounding box AND either x/y axis touches it.
+        float xScale = ((float) bounding) / width;
+        float yScale = ((float) bounding) / height;
+        float scale = (xScale <= yScale) ? xScale : yScale;
+        Log.i("Test", "xScale = " + Float.toString(xScale));
+        Log.i("Test", "yScale = " + Float.toString(yScale));
+        Log.i("Test", "scale = " + Float.toString(scale));
+
+        // Create a matrix for the scaling and add the scaling data
+        Matrix matrix = new Matrix();
+        matrix.postScale(scale, scale);
+
+        // Create a new bitmap and convert it to a format understood by the ImageView
+        Bitmap scaledBitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true);
+        width = scaledBitmap.getWidth(); // re-use
+        height = scaledBitmap.getHeight(); // re-use
+        BitmapDrawable result = new BitmapDrawable(scaledBitmap);
+        Log.i("Test", "scaled width = " + Integer.toString(width));
+        Log.i("Test", "scaled height = " + Integer.toString(height));
+
+        // Apply the scaled bitmap
+        view.setImageDrawable(result);
+
+        // Now change ImageView's dimensions to match the scaled image
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+        params.width = width;
+        params.height = height;
+        view.setLayoutParams(params);
+
+        Log.i("Test", "done");
+    }
+
+    private int dpToPx(int dp)
+    {
+        float density = getActivity().getApplicationContext().getResources().getDisplayMetrics().density;
+        return Math.round((float)dp * density);
     }
 
     class MyAsyncTask extends AsyncTask<String, String, Bitmap> {
@@ -208,23 +290,6 @@ public class ViewItemFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
-//        final Button button = (Button) container. findViewById(R.id.buttonBuy);
-//        button.setOnClickListener(new View.OnClickListener() {
-//                                      //  button.setOnClickListener(new OnClickListener() {
-//
-//                                      //Handles scan button click, makes a call to another QR scanning app
-//                                      @Override
-//                                      public void onClick(View v) {
-//
-//                                        Toast.makeText(getActivity(), "clicked", Toast.LENGTH_SHORT).show();
-//
-//                                          // MainActivity.connectToDB();
-//                                      }
-//
-//                                  }
-//        );
-
         return inflater.inflate(R.layout.fragment_view_item, container, false);
 
 
