@@ -27,7 +27,7 @@ import java.util.List;
  * Large screen devices (such as tablets) are supported by replacing the ListView
  * with a GridView.
  * <p />
- * Activities containing this fragment MUST implement the {@link Callbacks}
+ * Activities containing this fragment MUST implement the {@link }
  * interface.
  */
 public class CategoryFragment extends Fragment implements AbsListView.OnItemClickListener {
