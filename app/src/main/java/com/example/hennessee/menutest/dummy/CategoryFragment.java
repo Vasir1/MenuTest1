@@ -116,8 +116,14 @@ public class CategoryFragment extends Fragment implements AbsListView.OnItemClic
 
     public void SetList(String[] items)
     {
-        mAdapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, array);
+        try {
+            mAdapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_list_item_1, android.R.id.text1, array);
+        }
+        catch(Exception ex)
+        {
+            Log.e("Error", ex.toString());
+        }
     }
 
     @Override

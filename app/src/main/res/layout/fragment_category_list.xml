@@ -16,4 +16,14 @@
         android:layout_height="match_parent"
         android:gravity="center" />
 
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView"
+        android:layout_gravity="top|center"
+        android:clickable="false"
+        android:fastScrollEnabled="true"
+        android:drawSelectorOnTop="false"
+        android:choiceMode="singleChoice" />
+
 </FrameLayout>

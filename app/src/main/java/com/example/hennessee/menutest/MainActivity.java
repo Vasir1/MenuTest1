@@ -50,7 +50,9 @@ import java.util.List;
 
 
 public class MainActivity extends Activity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, scanFragment.OnFragmentInteractionListener, SpecialsFragment.OnFragmentInteractionListener, DessertsFragment.OnFragmentInteractionListener, AppetizersFragment.OnFragmentInteractionListener, CategoryFragment.OnFragmentInteractionListener, ViewItemFragment.OnFragmentInteractionListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, scanFragment.OnFragmentInteractionListener, SpecialsFragment.OnFragmentInteractionListener, DessertsFragment.OnFragmentInteractionListener, AppetizersFragment.OnFragmentInteractionListener, CategoryFragment.OnFragmentInteractionListener, ViewItemFragment.OnFragmentInteractionListener,
+        OrderMenu.OnFragmentInteractionListener
+{
 
     public static User mUser;
     public static boolean scanned = false;
@@ -290,51 +292,17 @@ public class MainActivity extends Activity
             return;
         }
 
-        /*if(!scanned) {
-            switch (position) {
-                case 0:
-                    fragment = new scanFragment();
-                    break;
-                case 1:
-                    fragment = new SpecialsFragment();
-
-                    break;
-                case 2:
-                    fragment = new AppetizersFragment();
-
-                    break;
-                case 3:
-                    fragment = new DessertsFragment();
-                    break;
-                default:
-                    fragment = new SpecialsFragment();
-                    break;
-            }
-        }
-        else
-        {
-            switch (position) {
-                case 0:
-                    fragment = new SpecialsFragment();
-
-                    break;
-                case 1:
-                    fragment = new AppetizersFragment();
-
-                    break;
-                case 2:
-                    fragment = new DessertsFragment();
-                    break;
-                default:
-                    fragment = new SpecialsFragment();
-                    break;
-            }
-        }*/
-
         if (!scanned)
             fragment = new scanFragment();
+        else if(position == 0) {
+            if(mUser.mOrder.OrderItems.size() < 1)
+                fragment = new OrderMenu();
+            else
+                fragment = new OrderMenu(mUser.mOrder.OrderItems);
+
+        }
         else
-            fragment = mNavigationDrawerFragment.DrawerFragments.get(position);
+            fragment = mNavigationDrawerFragment.DrawerFragments.get(position - 1);
 
         fragmentManager.beginTransaction()
                 .replace(R.id.container, fragment)
@@ -533,6 +501,7 @@ public class MainActivity extends Activity
             try {
                 JSONArray jArray = new JSONArray(result);
                 List<String> categories = new ArrayList<String>();
+                categories.add("Order Menu");
                 List<com.example.hennessee.menutest.MenuItem> MenuItems = new ArrayList<com.example.hennessee.menutest.MenuItem>();
 
 

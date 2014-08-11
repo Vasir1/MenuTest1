@@ -73,6 +73,7 @@ public class NavigationDrawerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DrawerFragments = new ArrayList<CategoryFragment>();
+
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -155,8 +156,11 @@ public class NavigationDrawerFragment extends Fragment {
                 android.R.layout.simple_list_item_activated_1,
                 android.R.id.text1, arr ));
 
-        for(int i = 0; i < arr.length; i++)
+
+
+       for(int i = 0; i < arr.length; i++)
         {
+           if(i == 0) continue;
            CategoryFragment cf = new CategoryFragment();
             cf.Category = arr[i];
            DrawerFragments.add(cf);
@@ -188,7 +192,7 @@ public class NavigationDrawerFragment extends Fragment {
 
 
 
-        dynamicSelectItem(0);
+        dynamicSelectItem(1);
     }
 
     public boolean isDrawerOpen() {
@@ -272,6 +276,10 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     private void selectItem(int position) {
+        if(MainActivity.scanned && mCurrentSelectedPosition == position) {
+            return;
+        }
+
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
