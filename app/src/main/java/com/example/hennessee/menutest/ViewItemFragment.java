@@ -10,7 +10,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -103,15 +102,13 @@ public class ViewItemFragment extends Fragment {
         txtPrice.setText(price);
         txtComments.setText(comments);
 
-        txtComments.setMovementMethod(new ScrollingMovementMethod());
-
         new Thread(new Runnable() {
             public void run() {
                 final Drawable d = LoadImageFromWebOperations(ImageURL);
                 mImage.post(new Runnable() {
                     public void run() {
                         mImage.setImageDrawable(d);
-                        //scaleImage();
+                        scaleImage();
                     }
                 });
             }
@@ -287,13 +284,12 @@ public class ViewItemFragment extends Fragment {
                                       @Override
                                       public void onClick(View v) {
 
-                                          Toast.makeText(getActivity(), "Added to order!",
+                                          Toast.makeText(getActivity(), ""+mItem.name+" Added to order!",
                                                   Toast.LENGTH_SHORT).show();
                                          // com.example.hennessee.menutest.User user=new com.example.hennessee.menutest.Userv();
 
                                           // MainActivity.connectToDB();
-
-                                          MainActivity.mUser.mOrder.Add(mItem);
+                                         MainActivity.mUser.mOrder.Add(mItem);
                                       }
 
                                   }
@@ -309,8 +305,6 @@ public class ViewItemFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
-
-
     }
 
     public void onViewCreated (View view, Bundle savedInstanceState)

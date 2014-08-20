@@ -118,6 +118,9 @@ public class scanFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_scan, container, false);
 
+        //rootView.getBackground().setColorFilter(Color.parseColor("#500000"), PorterDuff.Mode.DARKEN);
+       // rootView.setBackgroundColor(Color.parseColor("#500000"));
+rootView.setBackgroundResource(R.drawable.wood);
         final Button button = (Button) rootView. findViewById(R.id.buttonScan);
         button.setOnClickListener(new View.OnClickListener() {
             //  button.setOnClickListener(new OnClickListener() {

@@ -5,8 +5,6 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-//import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -48,6 +46,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+//import android.support.v4.app.Fragment;
+
 
 public class MainActivity extends Activity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, scanFragment.OnFragmentInteractionListener, SpecialsFragment.OnFragmentInteractionListener, DessertsFragment.OnFragmentInteractionListener, AppetizersFragment.OnFragmentInteractionListener, CategoryFragment.OnFragmentInteractionListener, ViewItemFragment.OnFragmentInteractionListener,
@@ -58,6 +58,8 @@ public class MainActivity extends Activity
     public static boolean scanned = false;
 
     public String scannedMessage="";
+    public String[] elements;
+    public String url_="";
 
     public void onFragmentInteraction(Uri uri) {
 
@@ -110,6 +112,7 @@ public class MainActivity extends Activity
         });*/
     }
 
+    //Result of the QR scan
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 
         if (requestCode == 0) {
@@ -120,10 +123,14 @@ public class MainActivity extends Activity
                 String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
 
 
-                Toast.makeText(MainActivity.this, contents,
-                        Toast.LENGTH_SHORT).show();
 
+
+                elements = contents.split(" "); //ID table... URL?
+
+                Toast.makeText(MainActivity.this, elements[2],
+                        Toast.LENGTH_SHORT).show();
                 scanned = true;
+                Log.e("App", "Returned from QR");
 
                 mNavigationDrawerFragment.SetList();
 
@@ -131,52 +138,14 @@ public class MainActivity extends Activity
                 FragmentManager fragmentManager = getFragmentManager();
 
                 scannedMessage=contents;
-                new Thread(new SignIn(scannedMessage)).start();
-                /*fragmentManager.beginTransaction()
-                        .replace(R.id.container, frag)
-                        .commit();*/
-                //mNavigationDrawerFragment.dynamicSelectItem(0);
-                ///////////////
+                //new Thread(new SignIn(scannedMessage)).start();
+                //new MyAsyncTask().execute();
+                new getIP().execute(); // Getting IP to connect to.
 
 
-                //  JSONObject jsonobject;
-                //  jsonobject = JSONfunctions.getJSONfromURL("http://198.84.187.102/MenuGUI/Menu.php");
-                // jsonobject.getString()
-
-                //http post
 
 
-                // //connectToDB();
 
-
-//                URL url;
-//                try {
-//                    url = new URL("http://198.84.187.102/MenuGUI/Menu.php");
-//
-//                    URLConnection conn = url.openConnection();
-//
-//                    BufferedReader reader = new BufferedReader(new
-//                            InputStreamReader(conn.getInputStream()));
-//
-//                    StringBuffer sb = new StringBuffer("");
-//                    String line="";
-//                    while ((line = reader.readLine()) != null) {
-//                        sb.append(line);
-//                        break;
-//                    }
-//                    reader.close();
-//                    Toast.makeText(getApplicationContext(), sb.toString(), Toast.LENGTH_SHORT).show();
-//
-//                }
-//                catch (MalformedURLException e1) {
-//                    e1.printStackTrace();
-//                }
-//                catch (IOException e1){
-//                    e1.printStackTrace();
-//                }
-
-
-                new MyAsyncTask().execute();
 
 
 
@@ -213,13 +182,14 @@ public class MainActivity extends Activity
 
     }
 
+    //NOT in use.
     public void connectToDB() {
         String result = null;
         InputStream is = null;
 
         try {
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httppost = new HttpPost("http://74.178.252.239/MenuGUI/Menu.php");
+            HttpPost httppost = new HttpPost("http://198.84.187.102/MenuGUI/MenuJSN.php");
             // httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
             HttpResponse response = httpclient.execute(httppost);
             HttpEntity entity = response.getEntity();
@@ -422,7 +392,7 @@ public class MainActivity extends Activity
         String result = "";
 
         protected void onPreExecute() {
-            progressDialog.setMessage("Your progress dialog message...");
+            progressDialog.setMessage("Please wait, reading database");
             progressDialog.show();
             progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 public void onCancel(DialogInterface arg0) {
@@ -433,8 +403,13 @@ public class MainActivity extends Activity
 
         @Override
         protected Void doInBackground(String... params) {
+            //Get client's server, make a call to master.
+           // String url_select = "http://198.84.187.102/MenuGUI/Parse.php?ID="+elements[0];// MASTER IP will be here.
+           //String url_select = "http://198.84.187.102/MenuGUI/MenuJSN.php"; // MASTER IP will be here.
+           // String url_select = elements[2]+"/MenuGUI/MenuJSN.php";
+            Log.e("App", "Trying to read database..." +url_);
+            String url_select = url_+"/MenuGUI/MenuJSN.php";
 
-            String url_select = "http://74.178.252.239/MenuGUI/menuJSN.php";
 
             ArrayList<NameValuePair> param = new ArrayList<NameValuePair>();
 
@@ -552,6 +527,137 @@ public class MainActivity extends Activity
 
     } //class MyAsyncTask extends AsyncTask<String, String, Void>
 
+
+
+    class getIP extends AsyncTask<String, String, Void> {
+
+        private ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
+        InputStream inputStream = null;
+        String result = "";
+
+        protected void onPreExecute() {
+            progressDialog.setMessage("Please wait");
+            progressDialog.show();
+            progressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                public void onCancel(DialogInterface arg0) {
+                    getIP.this.cancel(true);
+                }
+            });
+        }
+
+        @Override
+        protected Void doInBackground(String... params) {
+            //Get client's server, make a call to master.
+            String url_select = "http://198.84.187.102/MenuGUI/Parse.php?ID="+elements[0];// MASTER IP will be here.
+//            String url_select = "http://198.84.187.102/MenuGUI/MenuJSN.php"; // MASTER IP will be here.
+            // String url_select = elements[2]+"/MenuGUI/MenuJSN.php";
+
+
+
+            ArrayList<NameValuePair> param = new ArrayList<NameValuePair>();
+
+            try {
+                // Set up HTTP post
+                // HttpClient is more then less deprecated. Need to change to URLConnection
+                HttpClient httpClient = new DefaultHttpClient();
+
+                HttpPost httpPost = new HttpPost(url_select);
+                httpPost.setEntity(new UrlEncodedFormEntity(param));
+                HttpResponse httpResponse = httpClient.execute(httpPost);
+                HttpEntity httpEntity = httpResponse.getEntity();
+
+                // Read content & Log
+                inputStream = httpEntity.getContent();
+            } catch (UnsupportedEncodingException e1) {
+                Log.e("UnsupportedEncodingException", e1.toString());
+                e1.printStackTrace();
+            } catch (ClientProtocolException e2) {
+                Log.e("ClientProtocolException", e2.toString());
+                e2.printStackTrace();
+            } catch (IllegalStateException e3) {
+                Log.e("IllegalStateException", e3.toString());
+                e3.printStackTrace();
+            } catch (IOException e4) {
+                Log.e("IOException", e4.toString());
+                e4.printStackTrace();
+            }
+            // Convert response to string using String Builder
+            try {
+                BufferedReader bReader = new BufferedReader(new InputStreamReader(inputStream, "iso-8859-1"), 8);
+                StringBuilder sBuilder = new StringBuilder();
+
+                String line = null;
+                while ((line = bReader.readLine()) != null) {
+                    sBuilder.append(line + "\n");
+                }
+
+                inputStream.close();
+                result = sBuilder.toString();
+
+            } catch (Exception e) {
+                Log.e("StringBuilding & BufferedReader", "Error converting result " + e.toString());
+            }
+            Log.w("DATABASE", result);
+            com.example.hennessee.menutest.MenuItem item = new com.example.hennessee.menutest.MenuItem();
+            // JsonParser parser = Json.createParser(new StringReader("[]"));
+
+            //TODO string parsing, either normal string building, but there might be JSON specific tools to make it easier.
+            //http://docs.oracle.com/javaee/7/api/javax/json/stream/JsonParser.html
+            //http://stackoverflow.com/questions/2591098/how-to-parse-json-in-java
+            //
+            //item.name=result.
+            progressDialog.dismiss();
+
+
+            return null;
+        } // protected Void doInBackground(String... params)
+
+
+        protected void onPostExecute(Void v) {
+
+            //parse JSON data
+            try {
+                JSONArray jArray = new JSONArray(result);
+                List<String> categories = new ArrayList<String>();
+                List<com.example.hennessee.menutest.MenuItem> MenuItems = new ArrayList<com.example.hennessee.menutest.MenuItem>();
+
+
+                // url_="";
+                for (int i = 0; i < jArray.length(); i++) {
+
+                    JSONObject jObject = jArray.getJSONObject(i);
+
+
+                     url_=jObject.getString("URL");
+                            //new Thread(new SignIn(scannedMessage)).start();
+                   // Log.e("URL",jObject.getString("URL"));
+                    Log.e("App", "Received URL from Master.");
+
+
+                } // End for Loop
+
+                this.progressDialog.dismiss();
+                new Thread(new SignIn(url_)).start();
+                new MyAsyncTask().execute();
+                //String[] arr = categories.toArray(new String[categories.size()]);
+               // mNavigationDrawerFragment.SetList(arr, MenuItems);
+                //mNavigationDrawerFragment.dynamicSelectItem(0);
+
+
+
+
+
+            } catch (JSONException e) {
+
+                Log.e("JSONException", "Error: " + e.toString());
+
+            } // catch (JSONException e)
+
+
+        } // protected void onPostExecute(Void v)
+
+    } //class MyAsyncTask extends AsyncTask<String, String, Void>
+
     private class SignIn implements Runnable {
         private String mMsg;
 
@@ -562,7 +668,11 @@ public class MainActivity extends Activity
         public void run() {
             try {
 
-                Socket client = new Socket("74.178.252.239", 7575);  //connect to server
+               // String[] elements = mMsg.split(" "); //ID table... URL?
+
+                Log.e("App", "Trying to sign in...");
+                //Socket client = new Socket(elements[2], 7575);  //connect to server
+                Socket client = new Socket(mMsg, 7575);  //connect to server
                 PrintWriter printwriter = new PrintWriter(client.getOutputStream(), true);
                 printwriter.write(mMsg);  //write the message to output stream
 

@@ -19,6 +19,7 @@
         android:id="@+id/buttonScan"
         android:layout_gravity="center_horizontal|top"
         android:layout_below="@+id/section_label"
+        android:src="@drawable/wood"
         android:layout_centerHorizontal="true" />
 
 </FrameLayout>

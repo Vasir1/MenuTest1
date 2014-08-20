@@ -1,17 +1,17 @@
 package com.example.hennessee.menutest;
 
 
-import android.app.Activity;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
-import android.app.ListFragment;
+import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.hennessee.menutest.dummy.CategoryFragment;
 
@@ -107,6 +106,7 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
+        mDrawerListView.setBackgroundColor(Color.parseColor("#780000"));
         String[] mArray = {"Scan"};
 
         if(MainActivity.scanned)
