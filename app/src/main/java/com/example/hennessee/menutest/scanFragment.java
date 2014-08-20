@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 /**
  * Created by Kyle on 29/07/2014.
@@ -120,8 +120,8 @@ public class scanFragment extends Fragment {
 
         //rootView.getBackground().setColorFilter(Color.parseColor("#500000"), PorterDuff.Mode.DARKEN);
        // rootView.setBackgroundColor(Color.parseColor("#500000"));
-rootView.setBackgroundResource(R.drawable.wood);
-        final Button button = (Button) rootView. findViewById(R.id.buttonScan);
+rootView.setBackgroundResource(R.drawable.border);
+        final ImageButton button = (ImageButton) rootView. findViewById(R.id.buttonScan);
         button.setOnClickListener(new View.OnClickListener() {
             //  button.setOnClickListener(new OnClickListener() {
 

@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -276,7 +277,8 @@ public class ViewItemFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView=inflater.inflate(R.layout.fragment_view_item, container, false);
 
-        final Button button = (Button) rootView. findViewById(R.id.buttonBuy);
+        rootView.setBackgroundResource(R.drawable.border);
+        final ImageButton button = (ImageButton) rootView. findViewById(R.id.buttonBuy);
         button.setOnClickListener(new View.OnClickListener() {
                                       //  button.setOnClickListener(new OnClickListener() {
 

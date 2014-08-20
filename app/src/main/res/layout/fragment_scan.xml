@@ -12,14 +12,15 @@
         android:text="This is the scant." />
 
 
-    <Button
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Scan QR Code"
         android:id="@+id/buttonScan"
         android:layout_gravity="center_horizontal|top"
         android:layout_below="@+id/section_label"
-        android:src="@drawable/wood"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:alpha="100"
+        android:background="@drawable/scanbuttonselector" />
 
 </FrameLayout>
