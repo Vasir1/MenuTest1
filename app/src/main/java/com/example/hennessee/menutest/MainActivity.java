@@ -14,11 +14,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.hennessee.menutest.dummy.CategoryFragment;
@@ -57,10 +54,11 @@ public class MainActivity extends Activity
     public static User mUser;
     public static boolean scanned = false;
 
-    public String scannedMessage="";
-    public String[] elements;
+    public String scannedMessage=""; // Redundant, if we have it in an array below?
+    public String[] elements; //Public array of QR. [0] is ID, [1] is table, etc.
     public String url_="";
 
+    public String masterURL="http://198.84.187.102/MenuGUI/Parse.php?ID="; // Master IP, obviously this won't change on release
     public void onFragmentInteraction(Uri uri) {
 
     }
@@ -95,21 +93,6 @@ public class MainActivity extends Activity
 
         mUser = new User();
 
-
-
-        /*final Button button = (Button) findViewById(R.id.buttonScan);
-        button.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(
-                        "com.google.zxing.client.android.SCAN");
-                intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
-                startActivityForResult(intent, 0);
-            }
-
-        });*/
     }
 
     //Result of the QR scan
@@ -140,49 +123,17 @@ public class MainActivity extends Activity
                 scannedMessage=contents;
                 //new Thread(new SignIn(scannedMessage)).start();
                 //new MyAsyncTask().execute();
+
+                //Instead of signing in or retriving menu, first retrieve the store IP
                 new getIP().execute(); // Getting IP to connect to.
 
-
-
-
-
-
-
-
-
-                /*try {
-
-                    Socket s = new Socket("localhost",12345); // Change localhost to your IP, obviously.
-                    //Could even get IP from the scan.
-
-                    //outgoing stream redirect to socket
-                    OutputStream out = s.getOutputStream();
-
-                    PrintWriter output = new PrintWriter(out);
-                    output.println("Hello Android!");
-                    BufferedReader input = new BufferedReader(new InputStreamReader(s.getInputStream()));
-
-                    //read line(s)
-                    String st = input.readLine();
-                    ///. . .
-                    //Close connection
-                    s.close();
-
-
-                } catch (UnknownHostException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }*/
 
             }
         }
 
     }
 
-    //NOT in use.
+    //NOT in use. Remove this function?
     public void connectToDB() {
         String result = null;
         InputStream is = null;
@@ -209,8 +160,6 @@ public class MainActivity extends Activity
             String line = null;
             while ((line = reader.readLine()) != null) {
                 sb.append(line + "\n");
-                //  Intent i = new Intent(getBaseContext(),DatabaseActivity.class);
-                //  startActivity(i);
             }
             is.close();
 
@@ -252,11 +201,6 @@ public class MainActivity extends Activity
                             return;
                         }
                     })
-                    /*.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    })*/
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
             return;
@@ -343,48 +287,7 @@ public class MainActivity extends Activity
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-
-
-            return rootView;
-        }
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
-        }
-    }
-
+    //Retrieves menu
     class MyAsyncTask extends AsyncTask<String, String, Void> {
 
         private ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
@@ -529,6 +432,7 @@ public class MainActivity extends Activity
 
 
 
+    //Retrives IP associated with scanned store ID
     class getIP extends AsyncTask<String, String, Void> {
 
         private ProgressDialog progressDialog = new ProgressDialog(MainActivity.this);
@@ -548,7 +452,7 @@ public class MainActivity extends Activity
         @Override
         protected Void doInBackground(String... params) {
             //Get client's server, make a call to master.
-            String url_select = "http://198.84.187.102/MenuGUI/Parse.php?ID="+elements[0];// MASTER IP will be here.
+            String url_select = ""+masterURL +elements[0];// MASTER IP will be here.
 //            String url_select = "http://198.84.187.102/MenuGUI/MenuJSN.php"; // MASTER IP will be here.
             // String url_select = elements[2]+"/MenuGUI/MenuJSN.php";
 
@@ -658,6 +562,7 @@ public class MainActivity extends Activity
 
     } //class MyAsyncTask extends AsyncTask<String, String, Void>
 
+    //Sign into store table.
     private class SignIn implements Runnable {
         private String mMsg;
 
@@ -705,6 +610,7 @@ public class MainActivity extends Activity
             item =_item;
         }
 
+        //What is this?
         public void run() {
             try {
 

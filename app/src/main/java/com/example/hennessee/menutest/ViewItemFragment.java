@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -193,6 +192,7 @@ public class ViewItemFragment extends Fragment {
         protected Bitmap doInBackground(String... params) {
 
         bmp = DownloadImage(ImageURL);
+            //TODO: Possibly convert image to imagebutton, onclick brings to a larger image of the food?
         return bmp;
 
         } // protected Void doInBackground(String... params)
